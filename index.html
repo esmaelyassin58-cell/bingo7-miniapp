@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[21/06/2026 23:07] Y: <!DOCTYPE html>
 <html>
 <head>
 <title>Bingo7</title>
@@ -32,6 +32,174 @@ Deposit
 <button style="width:100%;padding:15px;margin-top:10px;">
 Withdraw
 </button>
+
+</body>
+</html>
+[21/06/2026 23:36] Y: <!DOCTYPE html>
+<html>
+<head>
+<title>Bingo7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+    font-family:Arial;
+    padding:20px;
+    background:#f5f5f5;
+    text-align:center;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.room{
+    background:#fff;
+}
+
+.gameArea{
+    display:none;
+}
+
+.card{
+    display:grid;
+    grid-template-columns:repeat(5,60px);
+    gap:5px;
+    justify-content:center;
+    margin-top:20px;
+}
+
+.cell{
+    width:60px;
+    height:60px;
+    background:white;
+    border:1px solid #333;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.action{
+    background:#4CAF50;
+    color:white;
+}
+
+.back{
+    background:#f44336;
+    color:white;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🎱 Bingo7</h1>
+
+<h3>Balance: <span id="balance">0</span> ETB</h3>
+
+<hr>
+
+<!-- MENU -->
+<div id="menu">
+
+<h2>Rooms</h2>
+
+<button class="room" onclick="joinRoom(10)">10 ETB Room</button>
+<button class="room" onclick="joinRoom(20)">20 ETB Room</button>
+
+<hr>
+
+<button>Deposit</button>
+<button>Withdraw</button>
+
+</div>
+
+<!-- GAME -->
+<div id="game" class="gameArea">
+
+<h2>🎮 Bingo Game</h2>
+
+<div class="card" id="card"></div>
+
+<h3 id="result">Start</h3>
+
+<button class="action" onclick="drawNumber()">Draw Number</button>
+<button class="back" onclick="backMenu()">Leave Room</button>
+
+</div>
+
+<script>
+
+let balance = 0;
+
+// room join
+function joinRoom(cost){
+    if(balance < cost){
+        alert("Not enough balance!");
+        return;
+    }
+
+    balance -= cost;
+    document.getElementById("balance").innerText = balance;
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("game").style.display = "block";
+
+    startGame();
+}
+
+// start game
+let cardNumbers = [];
+
+function startGame(){
+    cardNumbers = [];
+    for(let i=1;i<=75;i++){
+        cardNumbers.push(i);
+    }
+
+    cardNumbers.sort(()=>Math.random()-0.5);
+
+    let card = document.getElementById("card");
+    card.innerHTML = "";
+
+    cardNumbers.slice(0,25).forEach(num=>{
+        let div = document.createElement("div");
+        div.className = "cell";
+        div.innerText = num;
+        card.appendChild(div);
+    });
+}
+
+// draw number
+function drawNumber(){
+    let draw = Math.floor(Math.random()*75)+1;
+
+    document.getElementById("result").innerText = "Drawn: " + draw;
+
+    let cells = document.getElementsByClassName("cell");
+
+    for(let c of cells){
+        if(parseInt(c.innerText) === draw){
+            c.style.background = "green";
+            c.style.color = "white";
+        }
+    }
+}
+
+// back to menu
+function backMenu(){
+    document.getElementById("game").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+}
+
+</script>
 
 </body>
 </html>
