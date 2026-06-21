@@ -1,755 +1,102 @@
-[21/06/2026 23:49] Y: <!DOCTYPE html>
-<html>
-<head>
-<title>Bingo7 - ፕሮፌሽናል እትም</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    padding: 15px;
-    background: #f0f2f5;
-    text-align: center;
-    margin: 0;
-}
-
-.container {
-    max-width: 450px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-h1 { color: #2c3e50; margin-bottom: 5px; }
-h3 { color: #7f8c8d; margin-top: 5px; }
-
-button {
-    width: 100%;
-    padding: 14px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s ease;
-}
-
-button:hover { opacity: 0.9; transform: translateY(-1px); }
-button:active { transform: translateY(1px); }
-
-.room {
-    background: #ffffff;
-    border: 2px solid #e0e0e0;
-    color: #333;
-}
-.room:hover { border-color: #3498db; background: #f7f9fa; }
-
-.gameArea { display: none; }
-
-/* Bingo Header (B-I-N-G-O) */
-.bingo-header {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    max-width: 320px;
-    margin: 15px auto 0 auto;
-}
-.letter {
-    font-size: 22px;
-    font-weight: 900;
-    color: #34495e;
-}
-
-.card {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    max-width: 320px;
-    margin: 5px auto 20px auto;
-}
-
-.cell {
-    aspect-ratio: 1;
-    background: #ffffff;
-    border: 2px solid #bdc3c7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    border-radius: 8px;
-    box-shadow: inset 0 -3px 0 #edf0f1;
-}
-
-.cell.marked {
-    background: #2ecc71;
-    color: white;
-    border-color: #27ae60;
-    box-shadow: inset 0 -3px 0 #219653;
-}
-
-.cell.free-space {
-    background: #f1c40f;
-    color: #2c3e50;
-    font-size: 12px;
-    border-color: #f39c12;
-    box-shadow: inset 0 -3px 0 #d35400;
-}
-
-/* Bingo Ball Display */
-.ball-container {
-    display: flex;
-    justify-content: center;
-    margin: 15px 0;
-}
-.bingo-ball {
-    width: 70px;
-    height: 70px;
-    background: radial-gradient(circle at 30% 30%, #ff7675, #d63031);
-    border-radius: 50%;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    border: 2px solid #fff;
-}
-
-.action { background: #3498db; color: white; }
-.auto-action { background: #e67e22; color: white; }
-.back { background: #95a5a6; color: white; }
-.money-btn { background: #2ecc71; color: white; }
-
-#drawn-list {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 13px;
-    color: #555;
-    max-height: 40px;
-    overflow-y: auto;
-    margin-bottom: 15px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-    <h1>🎱 Bingo7</h1>
-    <h3>ኮፒሊክስ ሂሳብ: <span id="balance">150</span> ETB</h3>
-    <hr style="border: 0; border-top: 1px solid #eee;">
-
-    <!-- MENU -->
-    <div id="menu">
-        <h2>የክፍል ምርጫ (Rooms)</h2>
-        <button class="room" onclick="joinRoom(10)">10 ETB Room (እስከ 50 ETB ያሸንፉ)</button>
-        <button class="room" onclick="joinRoom(20)">20 ETB Room (እስከ 100 ETB ያሸንፉ)</button>
-        <hr style="border: 0; border-top: 1px solid #eee;">
-        <button class="money-btn" onclick="deposit()">ብር አስገባ (Deposit)</button>
-        <button class="money-btn" onclick="withdraw()">ብር አውጣ (Withdraw)</button>
+<div id="card-selection-screen" class="room-screen">
+    <div class="top-bar">
+        <div>WALLET: <span id="wallet-balance">40 ETB</span></div>
+        <div>STAKE: <span id="stake-amount">10 ETB</span></div>
+        <div>TIME: <span id="countdown-timer">30</span>s</div>
     </div>
 
-    <!-- GAME AREA -->
-    <div id="game" class="gameArea">
-        <h2 id="room-info" style="color: #3498db; margin-bottom:0;"></h2>
-        
-        <div class="ball-container">
-            <div class="bingo-ball" id="ballDisplay">-</div>
-        </div>
-        <h3 id="result" style="color:#2c3e50;">ለመጀመር እጣ አውጣን ይጫኑ</h3>
+    <h2 class="title-yellow">Choose Your Bingo Card</h2>
+    <p class="sub-title">Game starting soon — pick your card!</p>
 
-        <div id="drawn-list">የወጡ ቁጥሮች: የሉም</div>
-[21/06/2026 23:49] Y: <!-- BINGO HEADERS -->
-        <div class="bingo-header">
-            <div class="letter">B</div>
-            <div class="letter">I</div>
-            <div class="letter">N</div>
-            <div class="letter">G</div>
-            <div class="letter">O</div>
-        </div>
-        <div class="card" id="card"></div>
-
-        <button class="action" id="drawBtn" onclick="drawNumber()">እጣ አውጣ (Draw)</button>
-        <button class="auto-action" id="autoBtn" onclick="toggleAutoDraw()">Auto Draw: OFF</button>
-        <button class="back" onclick="backMenu()">ከክፍል ውጣ (Leave)</button>
-    </div>
+    <div id="cards-grid" class="cards-grid"></div>
 </div>
-
-<script>
-let balance = 150; 
-let currentRoomCost = 0;
-let drawnNumbers = [];
-let isGameOver = false;
-let autoInterval = null;
-
-document.getElementById("balance").innerText = balance;
-
-// Helper to get unique random numbers within a range
-function getUniqueRandoms(min, max, count) {
-    let pool = [];
-    for (let i = min; i <= max; i++) pool.push(i);
-    pool.sort(() => Math.random() - 0.5);
-    return pool.slice(0, count);
-}
-
-// Join Room
-function joinRoom(cost) {
-    if (balance < cost) {
-        alert("በቂ ኮፒሊክስ የሎትም! እባክዎ መጀመሪያ ብር ያስገቡ።");
-        return;
-    }
-    balance -= cost;
-    currentRoomCost = cost;
-    document.getElementById("balance").innerText = balance;
-
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("game").style.display = "block";
-    document.getElementById("room-info").innerText = "🎮 " + cost + " ETB ክፍል";
-
-    startGame();
-}
-
-// Start Game & Generate TRUE Bingo Card Layout
-function startGame() {
-    drawnNumbers = [];
-    isGameOver = false;
-    document.getElementById("result").innerText = "ጨዋታው ተጀምሯል!";
-    document.getElementById("drawn-list").innerText = "የወጡ ቁጥሮች: የሉም";
-    document.getElementById("ballDisplay").innerText = "-";
-    document.getElementById("drawBtn").disabled = false;
-    
-    // Generate numbers according to real Bingo rules
-    let bSub = getUniqueRandoms(1, 15, 5);
-    let iSub = getUniqueRandoms(16, 30, 5);
-    let nSub = getUniqueRandoms(31, 45, 5);
-    let gSub = getUniqueRandoms(46, 60, 5);
-    let oSub = getUniqueRandoms(61, 75, 5);
-
-    let cardContainer = document.getElementById("card");
-    cardContainer.innerHTML = "";
-
-    // 5x5 Grid Generation (Row by Row)
-    for (let r = 0; r < 5; r++) {
-        let rowNumbers = [bSub[r], iSub[r], nSub[r], gSub[r], oSub[r]];
-        
-        rowNumbers.forEach((num, cIndex) => {
-            let cellIndex = r * 5 + cIndex;
-            let div = document.createElement("div");
-            div.className = "cell";
-            div.id = "cell-" + cellIndex;
-
-            // Center element (Row 2, Column 2) is FREE SPACE
-            if (cellIndex === 12) {
-                div.innerText = "FREE";
-                div.classList.add("marked", "free-space");
-            } else {
-                div.innerText = num;
-            }
-            cardContainer.appendChild(div);
-        });
-    }
-}
-
-// Draw Number
-function drawNumber() {
-    if (isGameOver) return;
-    if (drawnNumbers.length >= 75) {
-        document.getElementById("result").innerText = "ሁሉም ቁጥሮች አልቀዋል!";
-        stopAutoDraw();
-        return;
-    }
-
-    let draw;
-    do {
-        draw = Math.floor(Math.random() * 75) + 1;
-    } while (drawnNumbers.includes(draw));
-
-    drawnNumbers.push(draw);
-    
-    // Update UI Elements
-    document.getElementById("ballDisplay").innerText = draw;
-    document.getElementById("result").innerText = "🎯 የወጣው ቁጥር: " + draw;
-    document.getElementById("drawn-list").innerText = "የወጡ ቁጥሮች: " + drawnNumbers.join(", ");
-
-    // Check card match
-    let cells = document.getElementsByClassName("cell");
-    for (let c of cells) {
-        if (c.innerText !== "FREE" && parseInt(c.innerText) === draw) {
-            c.classList.add("marked");
-        }
-    }
-
-    checkBingo();
-}
-[21/06/2026 23:49] Y: // Toggle Auto Draw
-function toggleAutoDraw() {
-    let btn = document.getElementById("autoBtn");
-    if (autoInterval) {
-        stopAutoDraw();
-    } else {
-        btn.innerText = "Auto Draw: ON";
-        btn.style.background = "#2cc71";
-        autoInterval = setInterval(() => {
-            if (!isGameOver) drawNumber();
-            else stopAutoDraw();
-        }, 2500);
-    }
-}
-
-function stopAutoDraw() {
-    if (autoInterval) {
-        clearInterval(autoInterval);
-        autoInterval = null;
-    }
-    document.getElementById("autoBtn").innerText = "Auto Draw: OFF";
-    document.getElementById("autoBtn").style.background = "#e67e22";
-}
-
-// Check Win Conditions
-function checkBingo() {
-    let cells = document.getElementsByClassName("cell");
-    let markedStatus = [];
-
-    for (let i = 0; i < 25; i++) {
-        markedStatus.push(cells[i].classList.contains("marked"));
-    }
-
-    let win = false;
-
-    // 1. Horizontal Rows
-    for (let r = 0; r < 5; r++) {
-        if (markedStatus[r*5] && markedStatus[r*5+1] && markedStatus[r*5+2] && markedStatus[r*5+3] && markedStatus[r*5+4]) win = true;
-    }
-    // 2. Vertical Columns
-    for (let c = 0; c < 5; c++) {
-        if (markedStatus[c] && markedStatus[c+5] && markedStatus[c+10] && markedStatus[c+15] && markedStatus[c+20]) win = true;
-    }
-    // 3. Diagonals
-    if (markedStatus[0] && markedStatus[6] && markedStatus[12] && markedStatus[18] && markedStatus[24]) win = true;
-    if (markedStatus[4] && markedStatus[8] && markedStatus[12] && markedStatus[16] && markedStatus[20]) win = true;
-
-    if (win) {
-        isGameOver = true;
-        stopAutoDraw();
-        let prize = currentRoomCost * 5; 
-        balance += prize;
-        document.getElementById("balance").innerText = balance;
-        document.getElementById("result").innerText = "🎉 ቢንጎ! +" + prize + " ETB አሸንፈዋል! 🎉";
-        document.getElementById("drawBtn").disabled = true;
-        alert("🎉 ቢንጎ!!! " + prize + " ETB አሸንፈዋል!");
-    }
-}
-
-// Deposit / Withdraw Simulation
-function deposit() {
-    let amount = parseInt(prompt("ማስገባት የሚፈልጉትን የገንዘብ መጠን ያስገቡ (ETB):", "100"));
-    if (amount > 0) {
-        balance += amount;
-        document.getElementById("balance").innerText = balance;
-    }
-}
-
-function withdraw() {
-    let amount = parseInt(prompt("ማውጣት የሚፈልጉትን የገንዘብ መጠን ያስገቡ (ETB):", "50"));
-    if (amount > 0 && amount <= balance) {
-        balance -= amount;
-        document.getElementById("balance").innerText = balance;
-        alert(amount + " ETB በተሳካ ሁኔታ ወጥቷል!");
-    } else {
-        alert("የተሳሳተ መጠን ወይም በቂ ካፒታል የሎትም!");
-    }
-}
-
-// Back to Menu
-function backMenu() {
-    stopAutoDraw();
-    document.getElementById("game").style.display = "none";
-    document.getElementById("menu").style.display = "block";
-}
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-<title>Bingo7 - ፕሮፌሽናል እትም</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+/* ሙሉ ገጹን ጨለማ እና ሳቢ ማድረግ */
+.room-screen {
+    background-color: #121212;
+    color: white;
     padding: 15px;
-    background: #f0f2f5;
+    font-family: sans-serif;
     text-align: center;
-    margin: 0;
 }
 
-.container {
-    max-width: 450px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.title-yellow {
+    color: #ffcc00;
+    font-size: 20px;
+    margin-bottom: 5px;
 }
 
-h1 { color: #2c3e50; margin-bottom: 5px; }
-h3 { color: #7f8c8d; margin-top: 5px; }
-
-button {
-    width: 100%;
-    padding: 14px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s ease;
-}
-
-button:hover { opacity: 0.9; transform: translateY(-1px); }
-button:active { transform: translateY(1px); }
-
-.room {
-    background: #ffffff;
-    border: 2px solid #e0e0e0;
-    color: #333;
-}
-.room:hover { border-color: #3498db; background: #f7f9fa; }
-
-.gameArea { display: none; }
-
-/* Bingo Header (B-I-N-G-O) */
-.bingo-header {
+/* 🌟 ዋናው ክፍል፦ 10 ረድፍ ያለው ግሪድ መስሪያ */
+.cards-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    max-width: 320px;
-    margin: 15px auto 0 auto;
-}
-.letter {
-    font-size: 22px;
-    font-weight: 900;
-    color: #34495e;
-}
-[21/06/2026 23:49] Y: .card {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    max-width: 320px;
-    margin: 5px auto 20px auto;
-}
-
-.cell {
-    aspect-ratio: 1;
-    background: #ffffff;
-    border: 2px solid #bdc3c7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    border-radius: 8px;
-    box-shadow: inset 0 -3px 0 #edf0f1;
-}
-
-.cell.marked {
-    background: #2ecc71;
-    color: white;
-    border-color: #27ae60;
-    box-shadow: inset 0 -3px 0 #219653;
-}
-
-.cell.free-space {
-    background: #f1c40f;
-    color: #2c3e50;
-    font-size: 12px;
-    border-color: #f39c12;
-    box-shadow: inset 0 -3px 0 #d35400;
-}
-
-/* Bingo Ball Display */
-.ball-container {
-    display: flex;
-    justify-content: center;
-    margin: 15px 0;
-}
-.bingo-ball {
-    width: 70px;
-    height: 70px;
-    background: radial-gradient(circle at 30% 30%, #ff7675, #d63031);
-    border-radius: 50%;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    border: 2px solid #fff;
-}
-
-.action { background: #3498db; color: white; }
-.auto-action { background: #e67e22; color: white; }
-.back { background: #95a5a6; color: white; }
-.money-btn { background: #2ecc71; color: white; }
-
-#drawn-list {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 13px;
-    color: #555;
-    max-height: 40px;
+    grid-template-columns: repeat(10, 1fr); /* በየመስመሩ 10 ካርታዎች ያሰልፋል */
+    gap: 8px; /* በካርታዎች መካከል ያለው ክፍተት */
+    margin-top: 15px;
+    max-height: 400px; /* ስክሪኑ ረጅም ከሆነ በራሱ ስክሮል እንዲያደርግ */
     overflow-y: auto;
-    margin-bottom: 15px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-    <h1>🎱 Bingo7</h1>
-    <h3>ኮፒሊክስ ሂሳብ: <span id="balance">150</span> ETB</h3>
-    <hr style="border: 0; border-top: 1px solid #eee;">
-
-    <!-- MENU -->
-    <div id="menu">
-        <h2>የክፍል ምርጫ (Rooms)</h2>
-        <button class="room" onclick="joinRoom(10)">10 ETB Room (እስከ 50 ETB ያሸንፉ)</button>
-        <button class="room" onclick="joinRoom(20)">20 ETB Room (እስከ 100 ETB ያሸንፉ)</button>
-        <hr style="border: 0; border-top: 1px solid #eee;">
-        <button class="money-btn" onclick="deposit()">ብር አስገባ (Deposit)</button>
-        <button class="money-btn" onclick="withdraw()">ብር አውጣ (Withdraw)</button>
-    </div>
-
-    <!-- GAME AREA -->
-    <div id="game" class="gameArea">
-        <h2 id="room-info" style="color: #3498db; margin-bottom:0;"></h2>
-        
-        <div class="ball-container">
-            <div class="bingo-ball" id="ballDisplay">-</div>
-        </div>
-        <h3 id="result" style="color:#2c3e50;">ለመጀመር እጣ አውጣን ይጫኑ</h3>
-
-        <div id="drawn-list">የወጡ ቁጥሮች: የሉም</div>
-
-        <!-- BINGO HEADERS -->
-        <div class="bingo-header">
-            <div class="letter">B</div>
-            <div class="letter">I</div>
-            <div class="letter">N</div>
-            <div class="letter">G</div>
-            <div class="letter">O</div>
-        </div>
-        <div class="card" id="card"></div>
-
-        <button class="action" id="drawBtn" onclick="drawNumber()">እጣ አውጣ (Draw)</button>
-        <button class="auto-action" id="autoBtn" onclick="toggleAutoDraw()">Auto Draw: OFF</button>
-        <button class="back" onclick="backMenu()">ከክፍል ውጣ (Leave)</button>
-    </div>
-</div>
-
-<script>
-let balance = 150; 
-let currentRoomCost = 0;
-let drawnNumbers = [];
-let isGameOver = false;
-let autoInterval = null;
-
-document.getElementById("balance").innerText = balance;
-
-// Helper to get unique random numbers within a range
-function getUniqueRandoms(min, max, count) {
-    let pool = [];
-    for (let i = min; i <= max; i++) pool.push(i);
-    pool.sort(() => Math.random() - 0.5);
-    return pool.slice(0, count);
 }
 
-// Join Room
-function joinRoom(cost) {
-    if (balance < cost) {
-        alert("በቂ ኮፒሊክስ የሎትም! እባክዎ መጀመሪያ ብር ያስገቡ።");
-        return;
-    }
-    balance -= cost;
-    currentRoomCost = cost;
-    document.getElementById("balance").innerText = balance;
-
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("game").style.display = "block";
-    document.getElementById("room-info").innerText = "🎮 " + cost + " ETB ክፍል";
-[21/06/2026 23:49] Y: startGame();
+/* የእያንዳንዱ ካርቴላ በተን ቅርጽ (ቀይ ቀለም) */
+.card-item {
+    background-color: #d32f2f; /* የካርታው ቀይ ቀለም */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 0;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-// Start Game & Generate TRUE Bingo Card Layout
-function startGame() {
-    drawnNumbers = [];
-    isGameOver = false;
-    document.getElementById("result").innerText = "ጨዋታው ተጀምሯል!";
-    document.getElementById("drawn-list").innerText = "የወጡ ቁጥሮች: የሉም";
-    document.getElementById("ballDisplay").innerText = "-";
-    document.getElementById("drawBtn").disabled = false;
-    
-    // Generate numbers according to real Bingo rules
-    let bSub = getUniqueRandoms(1, 15, 5);
-    let iSub = getUniqueRandoms(16, 30, 5);
-    let nSub = getUniqueRandoms(31, 45, 5);
-    let gSub = getUniqueRandoms(46, 60, 5);
-    let oSub = getUniqueRandoms(61, 75, 5);
+/* ተጫዋቹ ካርታ ሲመርጥ የሚይዘው አረንጓዴ ቀለም */
+.card-item.selected {
+    background-color: #388e3c; 
+    box-shadow: 0 0 8px #fff;
+}
+// ገጹ ሲጫን ስራ አስጀምር
+document.addEventListener("DOMContentLoaded", () => {
+    generate200SelectionCards();
+    startCountdown(30); // ከ 30 ሰከንድ ጀምሮ እንዲቆጥር
+});
 
-    let cardContainer = document.getElementById("card");
-    cardContainer.innerHTML = "";
+// ከ 1 እስከ 200 ያሉትን ካርታዎች በስክሪኑ ላይ መደርደሪያ
+function generate200SelectionCards() {
+    const grid = document.getElementById("cards-grid");
+    grid.innerHTML = ""; // መጀመሪያ ባዶ ማድረግ
 
-    // 5x5 Grid Generation (Row by Row)
-    for (let r = 0; r < 5; r++) {
-        let rowNumbers = [bSub[r], iSub[r], nSub[r], gSub[r], oSub[r]];
-        
-        rowNumbers.forEach((num, cIndex) => {
-            let cellIndex = r * 5 + cIndex;
-            let div = document.createElement("div");
-            div.className = "cell";
-            div.id = "cell-" + cellIndex;
+    for (let i = 1; i <= 200; i++) {
+        const cardBtn = document.createElement("button");
+        cardBtn.className = "card-item";
+        cardBtn.innerText = i; // ቁጥሩን መጻፍ (1, 2, 3... 200)
 
-            // Center element (Row 2, Column 2) is FREE SPACE
-            if (cellIndex === 12) {
-                div.innerText = "FREE";
-                div.classList.add("marked", "free-space");
-            } else {
-                div.innerText = num;
-            }
-            cardContainer.appendChild(div);
+        // ተጫዋቹ ካርታ ሲመርጥ (ሲነካ)
+        cardBtn.addEventListener("click", () => {
+            // ከዚህ በፊት የተመረጠ ካለ ማጥፋት (አንድ ካርታ ብቻ እንዲመርጥ)
+            const previouslySelected = document.querySelector(".card-item.selected");
+            if (previouslySelected) previouslySelected.classList.remove("selected");
+
+            // አዲሱን መርጦ አረንጓዴ ማድረግ
+            cardBtn.classList.add("selected");
+            console.log("ተጫዋቹ የመረጠው ካርቴላ ቁጥር፦ " + i);
         });
+
+        grid.appendChild(cardBtn);
     }
 }
 
-// Draw Number
-function drawNumber() {
-    if (isGameOver) return;
-    if (drawnNumbers.length >= 75) {
-        document.getElementById("result").innerText = "ሁሉም ቁጥሮች አልቀዋል!";
-        stopAutoDraw();
-        return;
-    }
+// የሰዓት መቁጠሪያ ተግባር
+function startCountdown(seconds) {
+    let timeLeft = seconds;
+    const timerDisplay = document.getElementById("countdown-timer");
 
-    let draw;
-    do {
-        draw = Math.floor(Math.random() * 75) + 1;
-    } while (drawnNumbers.includes(draw));
+    const interval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.innerText = timeLeft;
 
-    drawnNumbers.push(draw);
-    
-    // Update UI Elements
-    document.getElementById("ballDisplay").innerText = draw;
-    document.getElementById("result").innerText = "🎯 የወጣው ቁጥር: " + draw;
-    document.getElementById("drawn-list").innerText = "የወጡ ቁጥሮች: " + drawnNumbers.join(", ");
-
-    // Check card match
-    let cells = document.getElementsByClassName("cell");
-    for (let c of cells) {
-        if (c.innerText !== "FREE" && parseInt(c.innerText) === draw) {
-            c.classList.add("marked");
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            alert("ጊዜው አብቅቷል! ወደ ቢንጎ መጫወቻ ገጽ እየተወሰዱ ነው...");
+            // እዚህ ላይ ጨዋታውን ወደ ማስጀመርያ ኮድ ይወስደዋል
         }
-    }
-
-    checkBingo();
+    }, 1000);
 }
-
-// Toggle Auto Draw
-function toggleAutoDraw() {
-    let btn = document.getElementById("autoBtn");
-    if (autoInterval) {
-        stopAutoDraw();
-    } else {
-        btn.innerText = "Auto Draw: ON";
-        btn.style.background = "#2cc71";
-        autoInterval = setInterval(() => {
-            if (!isGameOver) drawNumber();
-            else stopAutoDraw();
-        }, 2500);
-    }
-}
-
-function stopAutoDraw() {
-    if (autoInterval) {
-        clearInterval(autoInterval);
-        autoInterval = null;
-    }
-    document.getElementById("autoBtn").innerText = "Auto Draw: OFF";
-    document.getElementById("autoBtn").style.background = "#e67e22";
-}
-
-// Check Win Conditions
-function checkBingo() {
-    let cells = document.getElementsByClassName("cell");
-    let markedStatus = [];
-
-    for (let i = 0; i < 25; i++) {
-        markedStatus.push(cells[i].classList.contains("marked"));
-    }
-
-    let win = false;
-
-    // 1. Horizontal Rows
-    for (let r = 0; r < 5; r++) {
-        if (markedStatus[r*5] && markedStatus[r*5+1] && markedStatus[r*5+2] && markedStatus[r*5+3] && markedStatus[r*5+4]) win = true;
-    }
-    // 2. Vertical Columns
-    for (let c = 0; c < 5; c++) {
-        if (markedStatus[c] && markedStatus[c+5] && markedStatus[c+10] && markedStatus[c+15] && markedStatus[c+20]) win = true;
-    }
-    // 3. Diagonals
-    if (markedStatus[0] && markedStatus[6] && markedStatus[12] && markedStatus[18] && markedStatus[24]) win = true;
-    if (markedStatus[4] && markedStatus[8] && markedStatus[12] && markedStatus[16] && markedStatus[20]) win = true;
-[21/06/2026 23:49] Y: if (win) {
-        isGameOver = true;
-        stopAutoDraw();
-        let prize = currentRoomCost * 5; 
-        balance += prize;
-        document.getElementById("balance").innerText = balance;
-        document.getElementById("result").innerText = "🎉 ቢንጎ! +" + prize + " ETB አሸንፈዋል! 🎉";
-        document.getElementById("drawBtn").disabled = true;
-        alert("🎉 ቢንጎ!!! " + prize + " ETB አሸንፈዋል!");
-    }
-}
-
-// Deposit / Withdraw Simulation
-function deposit() {
-    let amount = parseInt(prompt("ማስገባት የሚፈልጉትን የገንዘብ መጠን ያስገቡ (ETB):", "100"));
-    if (amount > 0) {
-        balance += amount;
-        document.getElementById("balance").innerText = balance;
-    }
-}
-
-function withdraw() {
-    let amount = parseInt(prompt("ማውጣት የሚፈልጉትን የገንዘብ መጠን ያስገቡ (ETB):", "50"));
-    if (amount > 0 && amount <= balance) {
-        balance -= amount;
-        document.getElementById("balance").innerText = balance;
-        alert(amount + " ETB በተሳካ ሁኔታ ወጥቷል!");
-    } else {
-        alert("የተሳሳተ መጠን ወይም በቂ ካፒታል የሎትም!");
-    }
-}
-
-// Back to Menu
-function backMenu() {
-    stopAutoDraw();
-    document.getElementById("game").style.display = "none";
-    document.getElementById("menu").style.display = "block";
-}
-</script>
-
-</body>
-</html>
+            
