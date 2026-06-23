@@ -5,6 +5,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// የሪንደር አፕሊኬሽን ሊንክ
+const RENDER_URL = 'https://bingo7-miniapp.onrender.com';
+
 // index.html ዝግጁ ማድረግ
 app.use(express.static(path.join(__dirname)));
 
@@ -12,13 +15,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// ሰርቨር ማስጀመር
-app.listen(PORT, () => {
-  console.log("Server is running successfully");
-});
-
-// የቴሌግራም ቦት ማስጀመር (|| ምልክቶች ተስተካክለዋል)
+// የቴሌግራም ቦት ማስጀመር
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '8674688097:AAEJfKxw8FLiOU73vLBft2JZM200f6MOfDE');
+
+// ቴሌግራም መልእክቶችን ወደ ሪንደር የሚልክበት ሚስጥራዊ መንገድ (Webhook Middleware)
+app.use(bot.webhookCallback('/secret-path'));
 
 bot.start((ctx) => {
   ctx.reply(
@@ -32,38 +33,25 @@ bot.start((ctx) => {
   );
 });
 
-bot.command('register', (ctx) => {
-  ctx.reply('ምዝገባ በቅርቡ ይጀምራል');
-});
+bot.command('register', (ctx) => { ctx.reply('ምዝገባ በቅርቡ ይጀምራል'); });
+bot.command('play', (ctx) => { ctx.reply('ጨዋታው በቅርቡ ይከፈታል'); });
+bot.command('balance', (ctx) => { ctx.reply('ቀሪ ሂሳብ: 0 ETB'); });
+bot.command('deposit', (ctx) => { ctx.reply('ገንዘብ ለመጨመር የክፍያ መንገድ በቅርቡ ይታከላል'); });
+bot.command('withdraw', (ctx) => { ctx.reply('ገንዘብ ለማውጣት በቅርቡ ይገኛል'); });
+bot.command('support', (ctx) => { ctx.reply('ለድጋፍ: @your_support_username'); });
 
-bot.command('play', (ctx) => {
-  ctx.reply('ጨዋታው በቅርቡ ይከፈታል');
-});
-
-bot.command('balance', (ctx) => {
-  ctx.reply('ቀሪ ሂሳብ: 0 ETB');
-});
-
-bot.command('deposit', (ctx) => {
-  ctx.reply('ገንዘብ ለመጨመር የክፍያ መንገድ በቅርቡ ይታከላል');
-});
-
-bot.command('withdraw', (ctx) => {
-  ctx.reply('ገንዘብ ለማውጣት በቅርቡ ይገኛል');
-});
-
-bot.command('support', (ctx) => {
-  ctx.reply('ለድጋፍ: @your_support_username');
-});
-
-// ቦቱን ማስነሳት (የድሮ ግጭቶችን የሚያጠፋ ማስተካከያ ተጨምሯል)
-bot.launch({
-  allowedUpdates: ['message', 'callback_query'],
-  dropPendingUpdates: true
-}).then(() => {
-  console.log('Bingo7 Bot Started Successfully');
-}).catch((err) => {
-  console.error('Bot error:', err);
+// ሰርቨሩን ማስነሳት እና ዌብሁኩን ማገናኘት
+app.listen(PORT, async () => {
+  console.log(Server is running on port ${PORT});
+  try {
+    // የድሮውን ግንኙነት አጥፍቶ አዲሱን መንገድ ይዘረጋል
+    await bot.telegram.setWebhook(${RENDER_URL}/secret-path, {
+      drop_pending_updates: true
+    });
+    console.log('✅ Webhook Set Successfully! Old server blocked.');
+  } catch (err) {
+    console.error('Webhook set error:', err);
+  }
 });
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
