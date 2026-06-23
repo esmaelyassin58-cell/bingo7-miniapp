@@ -1,17 +1,27 @@
 const { Telegraf } = require('telegraf');
+const express = require('express');
+const path = require('path');
 
-const bot = new Telegraf('8674688097:AAEJfKxw8FLiOU73vLBft2JZM200f6MOfDE');
+const app = express();
 
-bot.start((ctx) => {
-  ctx.reply("👋 Bingo7 Bot is running!");
+// Render ለዌብሳይቱ የሚሰጠውን PORT ቁጥር እንዲጠቀም ማድረግ
+const PORT = process.env.PORT || 3000;
+
+// index.html ያለበትን ቦታ ለዌብሳይት (Mini App) ማዘጋጀት
+app.use(express.static(path.join(__dirname)));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-bot.launch();
+// ሰርቨሩን ማስጀመር (Render ላይ Deployment Failed እንዳይል)
+app.listen(PORT, () => {
+  console.log(Server is running on port ${PORT});
+});
 
-console.log("Bot started...");
-const { Telegraf } = require('telegraf');
-
-const bot = new Telegraf(process.env.BOT_TOKEN);
+// የቴሌግራም ቦቱን ማስጀመር 
+// ማሳሰቢያ፡ በRender Environment ላይ KEY የሚለውን 'TELEGRAM_BOT_TOKEN' ካልከው ይህንን ወደ process.env.TELEGRAM_BOT_TOKEN ቀይረው።
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '8674688097:AAEJfKxw8FLiOU73vLBft2JZM200f6MOfDE');
 
 bot.start((ctx) => {
   ctx.reply(
@@ -23,7 +33,7 @@ bot.start((ctx) => {
 /deposit - ገንዘብ መጨመር
 /withdraw - ገንዘብ ማውጣት
 /support - ድጋፍ
-);
+  );
 });
 
 bot.command('register', (ctx) => {
@@ -50,6 +60,11 @@ bot.command('support', (ctx) => {
   ctx.reply('☎️ ለድጋፍ: @your_support_username');
 });
 
-bot.launch();
+// ቦቱን ማስጀመር
+bot.launch().then(() => {
+  console.log('✅ Bingo7 Bot Started Successfully');
+});
 
-console.log('✅ Bingo7 Bot Started');
+// ቦቱ በሰላም እንዲቆም ማድረግ
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
