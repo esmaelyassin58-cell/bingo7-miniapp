@@ -17,7 +17,7 @@ app.listen(PORT, () => {
   console.log(Server is running on port ${PORT});
 });
 
-// የቴሌግራም ቦት ማስጀመር (ስህተቱ የተስተካከለበት መስመር)
+// የቴሌግራም ቦት ማስጀመር
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '8674688097:AAEJfKxw8FLiOU73vLBft2JZM200f6MOfDE');
 
 bot.start((ctx) => {
