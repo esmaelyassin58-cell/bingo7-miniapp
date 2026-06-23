@@ -5,16 +5,16 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// index.html ለሚኒ አፑ ዝግጁ ማድረግ
+// index.html ለሚኒ አፑ ማዘጋጀት
 app.use(express.static(path.join(__dirname)));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// የዌብ ሰርቨር ማስጀመር
+// ሰርቨር ማስጀመር (ምንም አይነት ውስብስብ ጥቅስ የሌለው ቀላል መስመር)
 app.listen(PORT, () => {
-  console.log(Server is running on port ${PORT});
+  console.log("Server is running successfully...");
 });
 
 // የቴሌግራም ቦት ማስጀመር
@@ -57,11 +57,11 @@ bot.command('support', (ctx) => {
   ctx.reply('☎️ ለድጋፍ: @your_support_username');
 });
 
-// ቦቱን ማስነሳት
+// ቦቱን ማንቀሳቀስ
 bot.launch().then(() => {
-  console.log('✅ Bingo7 Bot Started Successfully');
+  console.log('✅ Bingo7 Bot Started');
 }).catch((err) => {
-  console.error('Bot launch failed:', err);
+  console.error('Bot launch error:', err);
 });
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
