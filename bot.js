@@ -1,17 +1,4 @@
-[24/06/2026 00:28] Baba 3: {
-  "name": "bingo7-miniapp",
-  "version": "1.0.0",
-  "description": "Telegram Bot and Mini App",
-  "main": "bot.js",
-  "scripts": {
-    "start": "node bot.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "telegraf": "^4.16.3"
-  }
-}
-[24/06/2026 00:42] Baba 3: const { Telegraf } = require('telegraf');
+const { Telegraf } = require('telegraf');
 const express = require('express');
 const path = require('path');
 
@@ -25,12 +12,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// የዌብ ሰርቨር ማስጀመር (Render እንዳይዘጋብን)
+// የዌብ ሰርቨር ማስጀመር
 app.listen(PORT, () => {
   console.log(Server is running on port ${PORT});
 });
 
-// የቴሌግራም ቦት ማስጀመር
+// የቴሌግራም ቦት ማስጀመር (ስህተቱ የተስተካከለበት መስመር)
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '8674688097:AAEJfKxw8FLiOU73vLBft2JZM200f6MOfDE');
 
 bot.start((ctx) => {
