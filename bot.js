@@ -17,7 +17,7 @@ app.listen(PORT, () => {
   console.log("Server is running successfully");
 });
 
-// የቴሌግራም ቦት ማስጀመር
+// የቴሌግራም ቦት ማስጀመር (|| ምልክቶች ተስተካክለዋል)
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '8674688097:AAEJfKxw8FLiOU73vLBft2JZM200f6MOfDE');
 
 bot.start((ctx) => {
@@ -56,9 +56,12 @@ bot.command('support', (ctx) => {
   ctx.reply('ለድጋፍ: @your_support_username');
 });
 
-// ቦቱን ማስነሳት
-bot.launch().then(() => {
-  console.log('Bingo7 Bot Started');
+// ቦቱን ማስነሳት (የድሮ ግጭቶችን የሚያጠፋ ማስተካከያ ተጨምሯል)
+bot.launch({
+  allowedUpdates: ['message', 'callback_query'],
+  dropPendingUpdates: true
+}).then(() => {
+  console.log('Bingo7 Bot Started Successfully');
 }).catch((err) => {
   console.error('Bot error:', err);
 });
