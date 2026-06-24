@@ -2,71 +2,80 @@
 <html lang="am">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bingo 7</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="style.css">
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header class="app-header">
-            <div class="user-profile">
-                <div class="avatar" id="user-avatar">B</div>
-                <span class="username" id="user-name">Bingo 7</span>
+
+    <div id="welcome-view" class="main-container">
+        <div class="header-logo">
+            <span class="logo-badge">B</span>
+            <h2>Bingo 7</h2>
+            <button class="btn-rules" onclick="showRules()">⚙️ Rules</button>
+        </div>
+        
+        <div class="welcome-box">
+            <h1>Welcome to Bingo 7</h1>
+            <h3>▶ Choose Your Stake</h3>
+            
+            <div class="stake-buttons">
+                <button class="btn-stake" onclick="selectStake(10)">▶ Play 10</button>
+                <button class="btn-stake" onclick="selectStake(20)">▶ Play 20</button>
             </div>
-            <button class="rules-btn" onclick="showRules()">⚙️ Rules</button>
-        </header>
-
-        <main class="main-content" id="app-main">
-            <div id="welcome-view" class="view-active">
-                <h1 class="welcome-title">Welcome to <span class="highlight">Bingo 7</span></h1>
-                
-                <div class="stake-card">
-                    <h2 class="stake-title">▶ Choose Your Stake</h2>
-                    
-                    <button class="play-btn btn-10" onclick="selectStake(10)">
-                        Play 10
-                    </button>
-                    
-                    <button class="play-btn btn-20" onclick="selectStake(20)">
-                        Play 20
-                    </button>
-                </div>
+            
+            <div class="stats-box">
+                <p>45,000+ Active Players</p>
+                <p>60,000+ Games Played</p>
             </div>
+        </div>
+    </div>
 
-            <div id="card-selection-view" class="view-hidden">
-                <div class="live-board">
-                    <div class="live-status">🟢 LIVE PLAYERS: <span id="live-players-count">1,245</span></div>
-                    <div class="jackpot-status">🏆 JACKPOT: <span id="jackpot-amount">0</span> ETB</div>
-                </div>
+    <div id="card-selection-view" class="main-container style-hidden">
+        <div class="top-bar">
+            <button class="btn-back" onclick="location.reload()">← Back</button>
+            <div class="wallet-badge">Main: <span id="main-wallet-display">500</span> ETB</div>
+            <div class="wallet-badge">Play: <span id="play-wallet-display">0</span> ETB</div>
+            <div class="wallet-badge">Stake: <span id="stake-counter-display">0</span></div>
+            <div class="timer-badge" id="game-timer">15 s</div>
+        </div>
+        
+        <div class="instructions">
+            <p>💡 የሚጫወቱበትን ካርቴላ (እስከ 5 ካርቴላ) በፍጥነት ይምረጡ!</p>
+        </div>
 
-                <h3 class="section-title">🎟️ የካርቴላ ምርጫ (Bingo 7)</h3>
-                <p class="balance-text">የእርስዎ ቀሪ ሂሳብ: <b id="user-balance-display">0 ETB</b></p>
-                
-                <div class="cards-grid" id="cards-container"></div>
-                
-                <p class="note-text">⚠️ ማሳሰቢያ: ካርቴላ ለመውሰድ ሂሳብዎ ላይ በቂ ብር መኖር አለበት።</p>
+        <div id="cards-container" class="cards-grid"></div>
+    </div>
+
+    <div id="gameplay-view" class="main-container style-hidden">
+        <div class="game-header">
+            <div class="header-stat">ካርድ: <span id="my-card-number">—</span></div>
+            <div class="header-stat">ተጫዋቾች: <span id="live-players-game">0</span></div>
+            <div class="header-stat" style="color:#ffcc00;">ደራሽ: <span id="live-derash-game">0</span> ETB</div>
+            <div class="header-stat">ጥሪ: <span id="live-calls-count">0</span></div>
+        </div>
+
+        <div class="game-body-layout">
+            <div id="bingo-numbers-board" class="numbers-board"></div>
+            
+            <div class="my-cards-sidebar">
+                <div class="sidebar-title">የእርስዎ ቁጥሮች</div>
+                <div id="my-lucky-numbers"></div>
             </div>
-        </main>
+        </div>
 
-        <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('game')">
-                <span class="nav-icon">🎮</span>
-                <span class="nav-label">Game</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('history')">
-                <span class="nav-icon">🕒</span>
-                <span class="nav-label">History</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('wallet')">
-                <span class="nav-icon">👛</span>
-                <span class="nav-label">Wallet</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('profile')">
-                <span class="nav-icon">👤</span>
-                <span class="nav-label">Profile</span>
-            </button>
-        </nav>
+        <div id="game-status-message" class="live-status-bar">
+            🔄 ጨዋታው ሊጀምር ነው፣ ይዘጋጁ...
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item active"><span class="icon">🎮</span>Game</button>
+        <button class="nav-item"><span class="icon">🕒</span>History</button>
+        <button class="nav-item"><span class="icon">👛</span>Wallet</button>
+        <button class="nav-item"><span class="icon">👤</span>Profile</button>
     </div>
 
     <script src="mini-app.js"></script>
