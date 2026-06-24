@@ -228,9 +228,7 @@ function startSmartGameplay() {
             let shareAmount = Math.floor(parseInt(finalPrize) / winningBookedCards.length);
             let pattern = getWinPatternName(callsCount); 
             
-            // 🛑 የተረጋጋ፣ የማይንቀሳቀስ እና የማያብለጨልጭ የአሸናፊ ሳጥን (Flat Design)
-            let winMessageHTML = 
-                <div style="background:#ffcc00; color:#000; padding:10px; border-radius:6px; margin-top:5px; border:2px solid #ffffff; font-weight:bold; text-align:center;">
+            ">
 // 🛑 አዲሱ የተረጋጋ እና በጥሞና ጎላ እያለ የሚቀንስ የአሸናፊ ሳጥን
             let winMessageHTML = 
                 <div style="background:#ffcc00; color:#000; padding:10px; border-radius:6px; margin-top:5px; border:2px solid #ffffff; font-weight:bold; text-align:center; animation: pulse 1.5s infinite alternate ease-in-out;">
