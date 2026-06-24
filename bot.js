@@ -21,7 +21,7 @@ app.listen(PORT, () => {
 });
 
 // 2. የቴሌግራም ቦት መዋቅር
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '8674688097:AAEJfKxw8FLiOU73vLBft2JZM200f6MOfDE');
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '8674688097:AAFCjfPZdyS6hMM5fT3p5t0Rrbv5aBqOwGg');
 
 // ተጠቃሚው /start ሲል የሚኒ አፑን መክፈቻ ቁልፍ (Web App Button) ያሳየዋል
 bot.start((ctx) => {
