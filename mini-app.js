@@ -1,4 +1,4 @@
-[24/06/2026 22:17] Y: const tg = window.Telegram.WebApp;
+const tg = window.Telegram.WebApp;
 tg.expand();
 tg.ready();
 
@@ -12,7 +12,7 @@ let allBookedCardsInGame = [];
 
 const bingoCardsDatabase = {};
 
-// 1. የቢንጎ ካርቴላዎችን እውነተኛ ባለ 5 ቁጥር አድርጎ ማመንጨት
+// 1. የቢንጎ ካርቴላዎችን ማመንጨት
 function generateAllCards() {
     for (let cardNum = 1; cardNum <= 200; cardNum++) {
         let cardNumbers = [];
@@ -35,7 +35,9 @@ function selectStake(amount) {
     
     document.getElementById('welcome-view').classList.add('style-hidden');
     document.getElementById('card-selection-view').classList.remove('style-hidden');
-    document.getElementById('gameplay-view').classList.add('style-hidden');
+    
+    const gpView = document.getElementById('gameplay-view');
+    if (gpView) gpView.classList.add('style-hidden');
     
     document.getElementById('main-wallet-display').innerText = mainWalletBalance;
     document.getElementById('play-wallet-display').innerText = amount;
@@ -115,7 +117,7 @@ function startCountdown() {
             
             while (allBookedCardsInGame.length < 30) {
                 let fakeBooked = Math.floor(Math.random() * 200) + 1;
-                if (!allBookedCardsInGame.includes(fakeBooked)) {
+if (!allBookedCardsInGame.includes(fakeBooked)) {
                     allBookedCardsInGame.push(fakeBooked);
                     stakeCounter += 1;
                 }
@@ -124,6 +126,7 @@ function startCountdown() {
         }
     }, 1000);
 }
+
 // 6. ስቴፕ 3፦ የቀጥታ ጨዋታ ገጽ መክፈት
 function switchToGameplayScreen() {
     document.getElementById('card-selection-view').classList.add('style-hidden');
@@ -210,9 +213,7 @@ function startSmartGameplay() {
         
         statusMsg.innerText = 🔄 ቁጥር ${nextNum} ወጥቷል!;
         
-        // አሸናፊዎችን መፈተሽ
         let winningBookedCards = [];
-
         for (let cardId = 1; cardId <= 200; cardId++) {
             let cardNums = bingoCardsDatabase[cardId];
             let isCardClosed = cardNums.every(num => calledNumbers.includes(num));
@@ -221,15 +222,12 @@ function startSmartGameplay() {
                 winningBookedCards.push(cardId);
             }
         }
-  // 🎉 የተያዘ እውነተኛ ካርቴላ ከዘጋ
-        if (winningBookedCards.length > 0) {
+    if (winningBookedCards.length > 0) {
             clearInterval(gameplayInterval); 
             
             let shareAmount = Math.floor(parseInt(finalPrize) / winningBookedCards.length);
             let pattern = getWinPatternName(callsCount); 
             
-            ">
-// 🛑 አዲሱ የተረጋጋ እና በጥሞና ጎላ እያለ የሚቀንስ የአሸናፊ ሳጥን
             let winMessageHTML = 
                 <div style="background:#ffcc00; color:#000; padding:10px; border-radius:6px; margin-top:5px; border:2px solid #ffffff; font-weight:bold; text-align:center; animation: pulse 1.5s infinite alternate ease-in-out;">
                     🏆 ቢንጎ ተገኝቷል! 🏆<br>
@@ -238,9 +236,8 @@ function startSmartGameplay() {
                     ሽልማት፡ <span>${shareAmount} ETB</span>
                 </div>
             ;
-            statusMsg.innerHTML = winMessageHTML;                    
+            statusMsg.innerHTML = winMessageHTML;
 
-            // የ 10 ሰከንድ ቆጣሪ ማሳያ
             let secondsLeftToShow = 10;
             const countdownTimerElement = document.createElement('div');
             countdownTimerElement.style.cssText = "font-size:11px; color:#ff9999; margin-top:6px; text-align:center; font-weight:bold;";
@@ -252,11 +249,12 @@ function startSmartGameplay() {
                 
                 if (secondsLeftToShow <= 0) {
                     clearInterval(showDelayInterval);
-                    // አውቶማቲካሊ ወደ ስቴፕ 2 መመለስ
                     selectStake(selectedStake); 
                 }
             }, 1000);
         }
         
     }, 1800); 
-}  
+}
+
+function showRules() { alert("bingo7 ቢንጎ ህጎች እዚህ ይዘረዘራሉ!"); }
