@@ -261,3 +261,13 @@ body {
 .nav-label {
     font-size: 11px;
 }
+@keyframes pulse {
+    from {
+        transform: scale(1);
+        box-shadow: 0 0 8px #ffcc00;
+    }
+    to {
+        transform: scale(1.03);
+        box-shadow: 0 0 20px #ffcc00;
+    }
+}
