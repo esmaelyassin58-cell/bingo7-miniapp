@@ -1,134 +1,89 @@
-<!DOCTYPE html>
-<html lang="am">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bingo7 Mini App</title>
-    <style>
-        /* 🎨 የ CSS (ውበት) ክፍል */
-        body {
-            background-color: #121212;
-            color: white;
-            padding: 15px;
-            font-family: sans-serif;
-            text-align: center;
-            margin: 0;
-        }
-        .room-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 400px;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 20px;
-            background: #1e1e1e;
-            padding: 10px;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-        .title-yellow {
-            color: #ffcc00;
-            font-size: 22px;
-            margin: 5px 0;
-        }
-        .sub-title {
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        /* 🌟 የ 10 ረድፍ ካርታዎች ማሰለፊያ */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 8px;
-            margin-top: 15px;
-            width: 100%;
-            max-width: 400px;
-            max-height: 380px;
-            overflow-y: auto;
-            padding: 5px;
-            background: #1a1a1a;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-        /* የቀይ ካርታዎች በተን ዲዛይን */
-        .card-item {
-            background-color: #d32f2f;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 12px 0;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-        .card-item:active {
-            transform: scale(0.9);
-        }
-        /* ሲመረጥ አረንጓዴ የሚሆን */
-        .card-item.selected {
-            background-color: #388e3c;
-            box-shadow: 0 0 8px #fff;
-        }
-    </style>
-</head>
-<body>
-    <div id="card-selection-screen" class="room-screen">
-        <div class="top-bar">
-            <div>WALLET: <span id="wallet-balance">40 ETB</span></div>
-            <div>STAKE: <span id="stake-amount">10 ETB</span></div>
-            <div>TIME: <span id="countdown-timer">30</span>s</div>
-        </div>
-        <h2 class="title-yellow">Choose Your Bingo Card</h2>
-        <p class="sub-title">ጨዋታው ሊጀምር ነው — ካርታ ይምረጡ!</p>
-        <div id="cards-grid" class="cards-grid"></div>
-    </div>
-    <script>
-        // ⚙️ የ ጃቫስክሪፕት (አእምሮ) ክፍል
-        document.addEventListener("DOMContentLoaded", () => {
-            generate200SelectionCards();
-            startCountdown(30);
-        });
-        // 200 ቁጥሮችን ፈጥሮ በ 10 ረድፍ መደርደሪያ
-        function generate200SelectionCards() {
-            const grid = document.getElementById("cards-grid");
-            grid.innerHTML = ""; 
-            for (let i = 1; i <= 200; i++) {
-                const cardBtn = document.createElement("button");
-                cardBtn.className = "card-item";
-                cardBtn.innerText = i; 
-                // ካርታ ሲመረጥ
-                cardBtn.addEventListener("click", () => {
-                    const previouslySelected = document.querySelector(".card-item.selected");
-                    if (previouslySelected) {
-                        previouslySelected.classList.remove("selected");
-                    }
-                    cardBtn.classList.add("selected");
-                    console.log("የተመረጠው ካርታ ቁጥር፦ " + i);
-                });
-                grid.appendChild(cardBtn);
+// 1. የቴሌግራም ሚኒ አፕን ማገናኘት
+const tg = window.Telegram.WebApp;
+let telegramUserId = "Guest";
+
+if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    telegramUserId = tg.initDataUnsafe.user.id;
+}
+
+// ለሙከራ ያህል መነሻ ሂሳቡን 0 ETB እናድርገው (የሰዎችን ስሜት ለመፈተሽ)
+let userBalance = 0; 
+let selectedStake = 0;
+
+// 2. 200 የተለያዩ የቢንጎ ካርቴላዎችን ማዘጋጃ ሲስተም
+const bingoCardsDatabase = {};
+
+function generateAllCards() {
+    for (let cardNum = 1; cardNum <= 200; cardNum++) {
+        let cardNumbers = [];
+        while (cardNumbers.length < 15) {
+            let num = Math.floor(Math.random() * 90) + 1;
+            if (!cardNumbers.includes(num)) {
+                cardNumbers.push(num);
             }
         }
-        // ሰዓት መቁጠሪያ
-        function startCountdown(seconds) {
-            let timeLeft = seconds;
-            const timerDisplay = document.getElementById("countdown-timer");
-[22/06/2026 01:46] Y: const interval = setInterval(() => {
-                timeLeft--;
-                timerDisplay.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    alert("ጊዜው አብቅቷል!");
-                }
-            }, 1000);
-        }
-    </script>
-</body>
-</html>
+        cardNumbers.sort((a, b) => a - b);
+        bingoCardsDatabase[cardNum] = cardNumbers;
+    }
+}
+generateAllCards();
+
+// 3. ተጠቃሚው 10 ወይም 20 ሲጫን - አሁን ያለምንም ከልካይ በቀጥታ ያስገባዋል!
+function selectStake(amount) {
+    selectedStake = amount;
+    // ብር ባይኖረውም ቀጥታ ወደ ካርቴላ ምርጫ እና ማጓጓዣ ገጽ ይሻገራል
+    showCardSelectionPage();
+}
+
+// 4. የተሻሻለው የካርቴላ መምረጫ ገጽ (የቀጥታ ሽልማት እና የሰዎች ብዛት ማሳያ ያለው)
+function showCardSelectionPage() {
+    const mainContent = document.querySelector('.main-content');
+    
+    // የጃክፖት እና የኦንላይን ተጫዋቾች ብዛት በዘፈቀደ የሚቀያየር (Live ለማስመስል)
+    const liveJackpot = selectedStake * 150; // ለምሳሌ የ 10 ብር ከሆነ 1500 ብር ጃክፖት
+    const livePlayers = Math.floor(Math.random() * 400) + 1200; // ከ1200 እስከ 1600 ተጫዋቾች ኦንላይን
+
+    mainContent.innerHTML = 
+        <div style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); padding: 12px; border-radius: 15px; width: 100%; margin-bottom: 15px; text-align: center;">
+            <div style="font-size: 14px; color: #ffcccc; font-weight: bold;">🟢 LIVE PLAYERS: <span style="color: #00ff00;">${livePlayers} 🔥</span></div>
+            <div style="font-size: 18px; font-weight: 800; margin-top: 5px;">🏆 ESTIMATED WINNING: <span style="color: #fff; text-shadow: 0 0 10px #ff0000;">${liveJackpot} ETB</span></div>
+        </div>
+
+        <h3 style="color: #fff; margin-bottom: 5px; font-size: 18px;">🎟️ የካርቴላ ምርጫ (Bingo 7)</h3>
+        <p style="font-size: 13px; margin-bottom: 15px; color: #ffcccc;">የእርስዎ ቀሪ ሂሳብ: <span style="font-weight:bold; color:#fff;">${userBalance} ETB</span></p>
+        
+        <div class="cards-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-height: 260px; overflow-y: auto; width: 100%; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
+            ${generateCardsGridHTML()}
+        </div>
+        
+        <p style="font-size: 11px; color: #ffcccc; margin-top: 10px;">⚠️ ማሳሰቢያ: ካርቴላ ለመውሰድ ሂሳብዎ ላይ በቂ ብር መኖር አለበት።</p>
+    ;
+}
+
+// 200 ቁልፎችን የመስሪያ ረዳት
+function generateCardsGridHTML() {
+    let html = '';
+    for (let i = 1; i <= 200; i++) {
+        html += 
+            <button onclick="confirmCardSelection(${i})" style="background: #ffffff; color: #b30000; border: none; padding: 12px 5px; font-weight: bold; border-radius: 8px; font-size: 16px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.2s;">
+                ${i}
+            </button>
+        ;
+    }
+    return html;
+}
+
+// 5. ተጠቃሚው ካርቴላ ሲነካ የባላንስ ማረጋገጫ (እዚህ ጋ ነው የሚከለክለው!)
+function confirmCardSelection(cardNumber) {
+    // አሁን ሂሳቡን ይፈትሻል
+    if (userBalance < selectedStake) {
+        alert(🚨 ይቅርታ! ካርቴላ ቁጥር ${cardNumber} ለመውሰድ በቂ ቀሪ ሂሳብ የለዎትም።\n\nእባክዎ መጀመሪያ ወደ ቦቱ ተመልሰው /deposit በመጠቀም አካውንትዎን ይሙሉ እና ያሸንፉ! 💰);
+        return;
+    }
+    
+    // ብር ካለው ግን ይቆርጣል
+    userBalance -= selectedStake;
+    let chosenNumbers = bingoCardsDatabase[cardNumber];
+    
+    alert(🎉 ማረጋገጫ: ካርቴላ ቁጥር ${cardNumber} በተሳካ ሁኔታ ወስደዋል!\n\nየእርስዎ ቁጥሮች: ${chosenNumbers.join(', ')});
+}
