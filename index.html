@@ -1,89 +1,69 @@
-// 1. የቴሌግራም ሚኒ አፕን ማገናኘት
-const tg = window.Telegram.WebApp;
-let telegramUserId = "Guest";
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bingo 7</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="user-profile">
+                <div class="avatar" id="user-avatar">B</div>
+                <span class="username" id="user-name">Bingo 7</span>
+            </div>
+            <button class="rules-btn" onclick="showRules()">⚙️ Rules</button>
+        </header>
 
-if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-    telegramUserId = tg.initDataUnsafe.user.id;
-}
+        <main class="main-content">
+            <h1 class="welcome-title">Welcome to <span class="highlight">Bingo 7</span></h1>
+            
+            <div class="stake-card">
+                <h2 class="stake-title">▶ Choose Your Stake</h2>
+                
+                <button class="play-btn btn-10" onclick="selectStake(10)">
+                    <span class="play-icon">▶</span> Play 10
+                </button>
+                
+                <button class="play-btn btn-20" onclick="selectStake(20)">
+                    <span class="play-icon">▶</span> Play 20
+                </button>
+            </div>
 
-// ለሙከራ ያህል መነሻ ሂሳቡን 0 ETB እናድርገው (የሰዎችን ስሜት ለመፈተሽ)
-let userBalance = 0; 
-let selectedStake = 0;
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span class="stat-number">45,000+</span>
+                    <span class="stat-label">Active Players</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">60,000+</span>
+                    <span class="stat-label">Games Played</span>
+                </div>
+            </div>
+        </main>
 
-// 2. 200 የተለያዩ የቢንጎ ካርቴላዎችን ማዘጋጃ ሲስተም
-const bingoCardsDatabase = {};
-
-function generateAllCards() {
-    for (let cardNum = 1; cardNum <= 200; cardNum++) {
-        let cardNumbers = [];
-        while (cardNumbers.length < 15) {
-            let num = Math.floor(Math.random() * 90) + 1;
-            if (!cardNumbers.includes(num)) {
-                cardNumbers.push(num);
-            }
-        }
-        cardNumbers.sort((a, b) => a - b);
-        bingoCardsDatabase[cardNum] = cardNumbers;
-    }
-}
-generateAllCards();
-
-// 3. ተጠቃሚው 10 ወይም 20 ሲጫን - አሁን ያለምንም ከልካይ በቀጥታ ያስገባዋል!
-function selectStake(amount) {
-    selectedStake = amount;
-    // ብር ባይኖረውም ቀጥታ ወደ ካርቴላ ምርጫ እና ማጓጓዣ ገጽ ይሻገራል
-    showCardSelectionPage();
-}
-
-// 4. የተሻሻለው የካርቴላ መምረጫ ገጽ (የቀጥታ ሽልማት እና የሰዎች ብዛት ማሳያ ያለው)
-function showCardSelectionPage() {
-    const mainContent = document.querySelector('.main-content');
-    
-    // የጃክፖት እና የኦንላይን ተጫዋቾች ብዛት በዘፈቀደ የሚቀያየር (Live ለማስመስል)
-    const liveJackpot = selectedStake * 150; // ለምሳሌ የ 10 ብር ከሆነ 1500 ብር ጃክፖት
-    const livePlayers = Math.floor(Math.random() * 400) + 1200; // ከ1200 እስከ 1600 ተጫዋቾች ኦንላይን
-
-    mainContent.innerHTML = 
-        <div style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); padding: 12px; border-radius: 15px; width: 100%; margin-bottom: 15px; text-align: center;">
-            <div style="font-size: 14px; color: #ffcccc; font-weight: bold;">🟢 LIVE PLAYERS: <span style="color: #00ff00;">${livePlayers} 🔥</span></div>
-            <div style="font-size: 18px; font-weight: 800; margin-top: 5px;">🏆 ESTIMATED WINNING: <span style="color: #fff; text-shadow: 0 0 10px #ff0000;">${liveJackpot} ETB</span></div>
-        </div>
-
-        <h3 style="color: #fff; margin-bottom: 5px; font-size: 18px;">🎟️ የካርቴላ ምርጫ (Bingo 7)</h3>
-        <p style="font-size: 13px; margin-bottom: 15px; color: #ffcccc;">የእርስዎ ቀሪ ሂሳብ: <span style="font-weight:bold; color:#fff;">${userBalance} ETB</span></p>
-        
-        <div class="cards-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-height: 260px; overflow-y: auto; width: 100%; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
-            ${generateCardsGridHTML()}
-        </div>
-        
-        <p style="font-size: 11px; color: #ffcccc; margin-top: 10px;">⚠️ ማሳሰቢያ: ካርቴላ ለመውሰድ ሂሳብዎ ላይ በቂ ብር መኖር አለበት።</p>
-    ;
-}
-
-// 200 ቁልፎችን የመስሪያ ረዳት
-function generateCardsGridHTML() {
-    let html = '';
-    for (let i = 1; i <= 200; i++) {
-        html += 
-            <button onclick="confirmCardSelection(${i})" style="background: #ffffff; color: #b30000; border: none; padding: 12px 5px; font-weight: bold; border-radius: 8px; font-size: 16px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.2s;">
-                ${i}
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('game')">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-label">Game</span>
             </button>
-        ;
-    }
-    return html;
-}
+            <button class="nav-item" onclick="switchTab('history')">
+                <span class="nav-icon">🕒</span>
+                <span class="nav-label">History</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('wallet')">
+                <span class="nav-icon">👛</span>
+                <span class="nav-label">Wallet</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profile')">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </nav>
+    </div>
 
-// 5. ተጠቃሚው ካርቴላ ሲነካ የባላንስ ማረጋገጫ (እዚህ ጋ ነው የሚከለክለው!)
-function confirmCardSelection(cardNumber) {
-    // አሁን ሂሳቡን ይፈትሻል
-    if (userBalance < selectedStake) {
-        alert(🚨 ይቅርታ! ካርቴላ ቁጥር ${cardNumber} ለመውሰድ በቂ ቀሪ ሂሳብ የለዎትም።\n\nእባክዎ መጀመሪያ ወደ ቦቱ ተመልሰው /deposit በመጠቀም አካውንትዎን ይሙሉ እና ያሸንፉ! 💰);
-        return;
-    }
-    
-    // ብር ካለው ግን ይቆርጣል
-    userBalance -= selectedStake;
-    let chosenNumbers = bingoCardsDatabase[cardNumber];
-    
-    alert(🎉 ማረጋገጫ: ካርቴላ ቁጥር ${cardNumber} በተሳካ ሁኔታ ወስደዋል!\n\nየእርስዎ ቁጥሮች: ${chosenNumbers.join(', ')});
-}
+    <script src="mini-app.js"></script>
+</body>
+</html>
