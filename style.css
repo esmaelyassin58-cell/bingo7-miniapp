@@ -1,0 +1,263 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body {
+    background: linear-gradient(135deg, #cc0000 0%, #4a0000 100%); /* አንተ በፈለግከው መሰረት ደማቅ ቀይ ጀርባ */
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 450px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* የራስጌ ክፍል (Header) */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    color: #cc0000;
+    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.username {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.rules-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ዋናው መግቢያ ገጽ */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex-grow: 1;
+    justify-content: center;
+    width: 100%;
+}
+
+.view-active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 30px;
+}
+
+.view-hidden {
+    display: none;
+    width: 100%;
+}
+
+.welcome-title {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.highlight {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    display: block;
+    font-size: 42px;
+    margin-top: 5px;
+    font-weight: 800;
+}
+
+/* ምርጫ ሳጥን (Stake Card) */
+.stake-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 30px 20px;
+    width: 100%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stake-title {
+    font-size: 15px;
+    color: #ffcccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+/* ቁልፎች (Buttons) */
+.play-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: transform 0.1s;
+}
+
+.play-btn:active {
+    transform: scale(0.97);
+}
+
+.btn-10 {
+    background: #ffffff;
+    color: #cc0000;
+}
+
+.btn-20 {
+    background: #ff3333;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+/* የካርቴላ ምርጫ ገጽ ዲዛይኖች */
+.live-board {
+    background: rgba(255,255,255,0.2); 
+    border: 1px solid rgba(255,255,255,0.4); 
+    padding: 12px; 
+    border-radius: 15px; 
+    width: 100%; 
+    margin-bottom: 15px; 
+    text-align: center;
+}
+
+.live-status {
+    font-size: 14px; 
+    color: #ffcccc; 
+    font-weight: bold;
+}
+
+.jackpot-status {
+    font-size: 20px; 
+    font-weight: 800; 
+    margin-top: 5px;
+}
+
+.section-title {
+    color: #fff; 
+    margin-bottom: 5px; 
+    font-size: 18px;
+}
+
+.balance-text {
+    font-size: 13px; 
+    margin-bottom: 15px; 
+    color: #ffcccc;
+}
+
+.cards-grid {
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px; 
+    max-height: 260px; 
+    overflow-y: auto; 
+    width: 100%; 
+    padding: 10px; 
+    background: rgba(0,0,0,0.4); 
+    border-radius: 15px; 
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.card-select-btn {
+    background: #ffffff; 
+    color: #cc0000; 
+    border: none; 
+    padding: 12px 5px; 
+    font-weight: bold; 
+    border-radius: 8px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.note-text {
+    font-size: 11px; 
+    color: #ffcccc; 
+    margin-top: 10px;
+}
+
+/* የታችኛው ሜኑ */
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    color: #ffcccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: #ffffff;
+}
+
+.nav-icon {
+    font-size: 18px;
+}
+
+.nav-label {
+    font-size: 11px;
+}
