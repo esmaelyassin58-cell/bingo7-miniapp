@@ -5,21 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bingo 7</title>
     <link rel="stylesheet" href="style.css">
-    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 
-    <div id="welcome-view" class="main-container">
+    <div id="welcome-view" class="view-section">
         <div class="header-logo">
-            <span class="logo-badge">B</span>
+            <span class="logo-badge">7</span>
             <h2>Bingo 7</h2>
             <button class="btn-rules" onclick="showRules()">⚙️ Rules</button>
         </div>
         
         <div class="welcome-box">
-            <h1>Welcome to Bingo 7</h1>
-            <h3>▶ Choose Your Stake</h3>
+            <h1>Welcome to Bingo</h1>
+            <h3>Choose Your Stake</h3>
             
             <div class="stake-buttons">
                 <button class="btn-stake" onclick="selectStake(10)">▶ Play 10</button>
@@ -27,13 +26,13 @@
             </div>
             
             <div class="stats-box">
-                <p>45,000+ Active Players</p>
-                <p>60,000+ Games Played</p>
+                <p>10,000+ Active Players</p>
+                <p>50,000+ Games Played</p>
             </div>
         </div>
     </div>
 
-    <div id="card-selection-view" class="main-container style-hidden">
+    <div id="card-selection-view" class="view-section style-hidden">
         <div class="top-bar">
             <button class="btn-back" onclick="location.reload()">← Back</button>
             <div class="wallet-badge">Main: <span id="main-wallet-display">500</span> ETB</div>
@@ -49,7 +48,7 @@
         <div id="cards-container" class="cards-grid"></div>
     </div>
 
-    <div id="gameplay-view" class="main-container style-hidden">
+    <div id="gameplay-view" class="view-section style-hidden">
         <div class="game-header">
             <div class="header-stat">ካርድ: <span id="my-card-number">—</span></div>
             <div class="header-stat">ተጫዋቾች: <span id="live-players-game">0</span></div>
